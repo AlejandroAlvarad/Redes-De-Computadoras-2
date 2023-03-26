@@ -1,0 +1,51 @@
+enable
+conf t
+hostname R1 
+ip domain-name CCNA-lab.com
+no ip domain-lookup
+service password-encryption
+security passwords min-length 12
+username SSHadmin secret 55Hadm!n2020
+crypto key generate rsa general-keys modulus 1024
+enable secret $cisco!PRIV*
+line console 0
+password $cisco!!CON*
+exec-timeout 6
+login
+line vty 0 4
+transport input ssh
+exec-timeout 4
+login local
++-----------------------------------+
+| LabRedes2 CCNA - SRWEv7           |
+| Practica 1.6.2                    |
+| 25/03/2023                        |
+| R1                                |
+| David Alejandro Alvarado Ojeda    |
+| Acceso Restringido!!              |
++-----------------------------------+
+*
+ipv6 unicast-routing
+interface g0/0
+ip address 192.168.0.1 255.255.255.0
+ipv6 add fe80::1 link-local
+ipv6 add 2001:db8:acad::1/64
+description Link a PC-B
+no shutdown
+exit
+interface g0/1
+ip address 192.168.1.1 255.255.255.0
+ipv6 add fe80::1 link-local
+ipv6 address 2001:db8:acad:1::1/64
+description Link a PC-A
+no shutdown
+exit
+interface loopback 0
+ip address 10.0.0.1 255.255.255.0
+ipv6 address 2001:db8:acad:2::1/64
+description Connect a loopback 0
+exit
+login block-for 120 attempts 3 within 60
+exit
+clock set 11:30:00 17 Feb 2023
+copy running-config startup-config
